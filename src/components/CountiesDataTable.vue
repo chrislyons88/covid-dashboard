@@ -1,11 +1,15 @@
 <template>
 	<div>
-		<h1>Covid Data by County</h1>
+		<h1>Covid Metrics by US County</h1>
 		<!-- <ul v-for="county in covidData" v-bind:key="county.fips">
 			<li>{{ county.county }}</li>
 			<p>{{ county.state }}</p>
 		</ul> -->
+		<div v-if="!covidData.length">
+			<Spinner />
+		</div>
 		<ag-grid-vue
+			v-else
 			style="width: 100%; height: 600px;"
 			class="ag-theme-alpine"
 			:columnDefs="columnDefs"
@@ -20,12 +24,14 @@
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import { AgGridVue } from "ag-grid-vue3";
+import Spinner from "@/components/Spinner.vue";
 
 export default {
 	name: "CountiesDataTable",
 	props: {},
 	components: {
 		AgGridVue,
+		Spinner
 	},
 	data() {
 		return {

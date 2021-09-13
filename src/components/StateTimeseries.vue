@@ -1,18 +1,24 @@
 <template>
 	<div>
-		<h1>Covid rates by state</h1>
-		<canvas id="timeseries-chart"></canvas>
+		<h1>Covid infection rates by state</h1>
+		<div v-if="!covidData.length">
+			<Spinner />
+		</div>
+		<canvas v-else id="timeseries-chart"></canvas>
 	</div>
 </template>
 
 <script>
 import Chart from "chart.js/auto";
 import colorLib from "@kurkle/color";
+import Spinner from "@/components/Spinner.vue";
 
 export default {
 	name: "StateTimeSeries",
 	props: {},
-	components: {},
+	components: {
+		Spinner,
+	},
 	data() {
 		return {
 			apiBaseUrl: "https://api.covidactnow.org/v2/",
@@ -200,7 +206,5 @@ export default {
 </script>
 
 <style lang="scss">
-	#tooltip td {
-  text-align: left;
-}
+
 </style>
