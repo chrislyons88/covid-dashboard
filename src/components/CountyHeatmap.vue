@@ -1,5 +1,6 @@
 <template>
 	<div class="heatmap">
+		<h1>Number of ICU Beds Bvailable in Each US County</h1>
 		<div v-if="!covidData.length">
 			<Spinner />
 		</div>
