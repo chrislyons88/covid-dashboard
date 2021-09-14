@@ -1,10 +1,17 @@
 <template>
 	<div>
-		<h1>Covid infection rates by state</h1>
+		<h1>Covid Infection Rates by US State</h1>
+
 		<div v-if="!covidData.length">
 			<Spinner />
 		</div>
-		<canvas v-else id="timeseries-chart"></canvas>
+		<div v-else>
+			<p>Click on individual states in the legend to show/hide their data.</p>
+			<button id="select-all" @click="selectDeselectAll">
+				{{ buttonText }}
+			</button>
+			<canvas id="timeseries-chart"></canvas>
+		</div>
 	</div>
 </template>
 
@@ -23,6 +30,8 @@ export default {
 		return {
 			apiBaseUrl: "https://api.covidactnow.org/v2/",
 			apiKey: "55783d149c7b461b87d3df4de4ffa9a1",
+			buttonText: "Hide all states",
+			// chart: {},
 			covidData: [],
 			chartData: {
 				type: "line",
@@ -33,7 +42,7 @@ export default {
 
 				options: {
 					responsive: true,
-					
+
 					interaction: {
 						mode: "index",
 						intersect: false,
@@ -45,8 +54,8 @@ export default {
 							text: " ",
 						},
 						tooltip: {
-						mode: "nearest",
-					},
+							mode: "nearest",
+						},
 					},
 					scales: {
 						y: {
@@ -56,7 +65,7 @@ export default {
 						},
 						y1: {
 							type: "linear",
-							display: true,
+							display: false,
 							position: "right",
 
 							// grid line settings
@@ -173,13 +182,35 @@ export default {
 				console.log(error);
 			}
 		},
+		selectDeselectAll() {
+			if (this.buttonText == "Hide all states") {
+				this.buttonText = "Show all states";
+				this.deselectAll();
+				
+			} else if(this.buttonText == "Show all states") {
+				this.buttonText = "Hide all states";
+				this.selectAll();
+			}
+		},
+		deselectAll() {
+			this.chart.data.datasets.forEach(function(ds) {
+				ds.hidden = true;
+			});
+			this.chart.update();
+		},
+		selectAll() {
+			this.chart.data.datasets.forEach(function(ds) {
+				ds.hidden = false;
+			});
+			this.chart.update();
+		},
 		randomRgb() {
 			var o = Math.round,
 				r = Math.random,
 				s = 255;
 			return (
 				"rgb(" + o(r() * s) + "," + o(r() * s) + "," + o(r() * s) + ")"
-			);
+			);0.
 		},
 		transparentize(value, opacity) {
 			var alpha = opacity === undefined ? 0.5 : 1 - opacity;
@@ -192,7 +223,7 @@ export default {
 		},
 		drawLineChart() {
 			const ctx = document.getElementById("timeseries-chart");
-			new Chart(ctx, this.chartData);
+			this.chart = new Chart(ctx, this.chartData);
 		},
 		populateChartLabels() {
 			this.chartData.data.labels = this.filteredLabels;
@@ -205,6 +236,13 @@ export default {
 };
 </script>
 
-<style lang="scss">
-
+<style scoped lang="scss">
+	button {
+		padding:10px 25px;
+		color: #fff;
+		font-weight: bold;
+		background:#000;
+		border-radius: 5px;
+		border: solid 2px #333;
+	}
 </style>
