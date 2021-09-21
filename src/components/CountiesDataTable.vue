@@ -1,6 +1,7 @@
 <template>
 	<div>
-		<h1>Covid Metrics by US County</h1><br>
+		<h1>Covid Metrics by US County</h1>
+		<br />
 		<!-- <ul v-for="county in covidData" v-bind:key="county.fips">
 			<li>{{ county.county }}</li>
 			<p>{{ county.state }}</p>
@@ -8,15 +9,24 @@
 		<div v-if="!covidData.length">
 			<Spinner />
 		</div>
-		<ag-grid-vue
-			v-else
-			style="width: 100%; height: 600px;"
-			class="ag-theme-alpine"
-			:columnDefs="columnDefs"
-			:rowData="rowData"
-			rowSelection="multiple"
-		>
-		</ag-grid-vue>
+		<div v-else>
+			<ag-grid-vue
+				style="width: 100%; height: 600px;"
+				class="ag-theme-alpine"
+				:columnDefs="columnDefs"
+				:rowData="rowData"
+				rowSelection="multiple"
+			>
+			</ag-grid-vue>
+			<footer>
+				<p>
+					Data provided by the
+					<a target="_blank" href="https://apidocs.covidactnow.org/"
+						>Covid Act Now API</a
+					>
+				</p>
+			</footer>
+		</div>
 	</div>
 </template>
 

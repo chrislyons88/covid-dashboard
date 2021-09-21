@@ -11,6 +11,9 @@
 				{{ buttonText }}
 			</button>
 			<canvas id="timeseries-chart"></canvas>
+			<footer>
+				<p>Data provided by the <a target="_blank" href="https://apidocs.covidactnow.org/">Covid Act Now API</a></p>
+			</footer>
 		</div>
 	</div>
 </template>

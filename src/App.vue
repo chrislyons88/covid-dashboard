@@ -12,13 +12,30 @@
     </li>
   </ul>
   <router-view />
+  
 </template>
 
 <style lang="scss">
+:root {
+  --green: #42b983;
+}
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+footer {
+  margin-top:50px;
+
+  p {
+    font-size: 1em !important;
+
+    a {
+      text-decoration: none;
+      font-weight: bold;
+      color: var(--green);
+    }
+  }
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -49,7 +66,7 @@
     padding: 30px;
 
     &.router-link-exact-active {
-      color: #42b983;
+      color: var(--green);
       background: #444;
     }
     &:hover {

@@ -8,6 +8,9 @@
 			<div class="chart">
 				<canvas id="chart"></canvas>
 			</div>
+			<footer>
+				<p>Data provided by the <a target="_blank" href="https://apidocs.covidactnow.org/">Covid Act Now API</a></p>
+			</footer>
 		</div>
 	</div>
 </template>
