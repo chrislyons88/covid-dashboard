@@ -1,12 +1,5 @@
 <template>
 	<div class="states">
-		<div id="nav">
-			<router-link to="/">View US county-level metrics</router-link>
-			<router-link to="/county-heatmap"
-				>View US county heatmap</router-link
-			>
-		</div>
-
 		<StateTimeseries />
 	</div>
 </template>

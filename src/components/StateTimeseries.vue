@@ -244,5 +244,6 @@ export default {
 		background:#000;
 		border-radius: 5px;
 		border: solid 2px #333;
+		margin-top: 10px;
 	}
 </style>

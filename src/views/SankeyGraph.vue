@@ -1,18 +1,18 @@
 <template>
-	<div class="county-heatmap">
-		<CountyHeatmap />
+	<div class="sankey">
+		<Sankey />
 	</div>
 </template>
 
 <script>
 // @ is an alias to /src
 
-import CountyHeatmap from "@/components/CountyHeatmap.vue";
+import Sankey from "@/components/Sankey.vue";
 
 export default {
 	name: "County Heatmap",
 	components: {
-		CountyHeatmap,
+		Sankey,
 	},
 };
 </script>

@@ -29,14 +29,26 @@ export default {
 			mapData: [],
 			pairBedsWithId: {},
 			pairNameWithId: {},
+			width: 960,
+			height: 600,
 		};
 	},
 	computed: {
 		covidCountyDataUrl() {
 			return this.apiBaseUrl + "counties.json?apiKey=" + this.apiKey;
 		},
+		svg() {
+			return d3
+				.select("#map")
+				.append("svg")
+				.attr("width", this.width)
+				.attr("height", this.height)
+				.attr("preserveAspectRatio", "xMinYMin meet")
+				.style("margin", "-15px auto")
+		}
 	},
 	async created() {
+		window.addEventListener("resize", this.redraw);
 		await this.getData();
 		await this.getMapData();
 		await this.populateSortedData();
@@ -64,13 +76,25 @@ export default {
 			let that = this;
 			this.covidData.forEach(function(d) {
 				let fipsStringToNumber = parseInt(d.fips);
-				that.pairBedsWithId[fipsStringToNumber] = +(
-					d.actuals.icuBeds.capacity -
-					d.actuals.icuBeds.currentUsageTotal
-				);
+				if((d.actuals.icuBeds.capacity -
+					d.actuals.icuBeds.currentUsageTotal) < 0) {
+						that.pairBedsWithId[fipsStringToNumber] = 0;
+				} else {
+					that.pairBedsWithId[fipsStringToNumber] = +(
+						d.actuals.icuBeds.capacity -
+						d.actuals.icuBeds.currentUsageTotal
+					);
+				}
+				
 				that.pairNameWithId[fipsStringToNumber] = d.county;
 				// console.log(d.actuals.icuBeds.capacity);
 			});
+		},
+		redraw() {
+			let chartDiv = document.getElementById("map");
+			this.width = chartDiv.clientWidth;
+			this.height = chartDiv.clientHeight;
+			// this.drawMap()
 		},
 		drawMap() {
 			let that = this;
@@ -84,36 +108,21 @@ export default {
 
 			// ready('', this.mapData, this.covidData);
 			// function ready(error, us, data) {
-			var width = 960,
-				height = 600;
-			var color_domain = [
-				5,
-				10,
-				15,
-				20,
-				25,
-				30,
-				35,
-				10000
-			];
-			var ext_color_domain = [
-				0,
-				5,
-				10,
-				15,
-				20,
-				25,
-				30,
-				35,
-			];
+			// var width = 960,
+			// 	height = 600;
+			var width = this.width,
+				height = this.height;
+			var color_domain = [1, 5, 10, 15, 20, 25, 30, 35, 10000];
+			var ext_color_domain = [0, 1, 5, 10, 15, 20, 25, 30, 35];
 			var legend_labels = [
 				"0",
-				"5+",
-				"10+",
-				"15+",
-				"20+",
-				"25+",
-				"30+",
+				"1-5",
+				"5-10",
+				"10-15",
+				"15-20",
+				"20-25",
+				"25-30",
+				"30-35",
 				"35+",
 			];
 			var color = d3.scale
@@ -121,14 +130,15 @@ export default {
 
 				.domain(color_domain)
 				.range([
+					"#3e1602",
 					"#662506",
-					"#993404", 
+					"#993404",
 					"#cc4c02",
-					"#ec7014", 
-					"#fe9929", 
+					"#ec7014",
+					"#fe9929",
 					"#fec44f",
-					"#fee391", 
-					"#fff7bc",   
+					"#fee391",
+					"#fff7bc",
 				]);
 
 			var div = d3
@@ -137,12 +147,14 @@ export default {
 				.attr("class", "tooltip")
 				.style("opacity", 0);
 
-			var svg = d3
-				.select("#map")
-				.append("svg")
-				.attr("width", width)
-				.attr("height", height)
-				.style("margin", "-15px auto");
+			var svg = this.svg;
+			// var svg = d3
+			// 	.select("#map")
+			// 	.append("svg")
+			// 	.attr("width", width)
+			// 	.attr("height", height)
+			// 	.attr("preserveAspectRatio", "xMinYMin meet")
+			// 	.style("margin", "-15px auto");
 			// var projection = d3.geo
 			// 	.albersUsa()
 			// 	.translate([width / 2, height / 2]);
@@ -260,7 +272,7 @@ export default {
 			legend
 				.append("rect")
 				.attr("x", function(d, i) {
-					return i * ls_w - ls_w;
+					return (i+1) * ls_w - ls_w;
 					// return 0;
 				})
 				.attr("y", 550)
@@ -274,7 +286,7 @@ export default {
 			legend
 				.append("text")
 				.attr("x", function(d, i) {
-					return i * ls_w - ls_w;
+					return (i+1) * ls_w - ls_w;
 					// return 0;
 				})
 				.attr("y", 590)
@@ -282,7 +294,8 @@ export default {
 					return legend_labels[i];
 				});
 
-			var legend_title = "Number of ICU beds Available";
+			var legend_title =
+				"Chloropleth Heatmap: Number of ICU beds Available";
 
 			svg.append("text")
 				// .attr("x", 600)
@@ -299,13 +312,14 @@ export default {
 
 <style lang="scss">
 .heatmap {
-	path {
-		// stroke: white;
-		// stroke-width: 1px;
-	}
+	width:100%;
+	max-width: 100%;
+	overflow: hidden;
 
-	body {
-		font-family: "Proxima Nova", sans-serif;
+	#map {
+		width:auto;
+		height:600px;
+		overflow-x: scroll;
 	}
 
 	.county {
@@ -313,10 +327,7 @@ export default {
 		font-weight: bold;
 		fill: #fff;
 	}
-	// .states {
-	// 	stroke: red;
-	// 	stroke-width: 2px;
-	// }
+
 	.states {
 		fill: none;
 		stroke: white;
@@ -339,7 +350,7 @@ export default {
 		position: absolute;
 		left: 75px;
 		text-align: center;
-		height: 16px;
+		// height: 16px;
 		padding: 10px;
 		font-size: 14px;
 		background: #ffffff;
@@ -353,10 +364,6 @@ export default {
 		margin: 20px 0 0 10px;
 	}
 
-	@media (max-width: 400px) {
-		.d3map {
-			display: none;
-		}
-	}
+
 }
 </style>

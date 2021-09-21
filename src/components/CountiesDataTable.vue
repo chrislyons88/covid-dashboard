@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<h1>Covid Metrics by US County</h1>
+		<h1>Covid Metrics by US County</h1><br>
 		<!-- <ul v-for="county in covidData" v-bind:key="county.fips">
 			<li>{{ county.county }}</li>
 			<p>{{ county.state }}</p>
@@ -31,7 +31,7 @@ export default {
 	props: {},
 	components: {
 		AgGridVue,
-		Spinner
+		Spinner,
 	},
 	data() {
 		return {
@@ -86,9 +86,7 @@ export default {
 			{ field: "test positivity ratio", sortable: true, filter: true },
 		];
 	},
-	mounted() {
-
-	},
+	mounted() {},
 	methods: {
 		async getData() {
 			try {
