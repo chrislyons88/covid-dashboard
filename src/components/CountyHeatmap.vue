@@ -51,7 +51,6 @@ export default {
 		}
 	},
 	async created() {
-		window.addEventListener("resize", this.redraw);
 		await this.getData();
 		await this.getMapData();
 		await this.populateSortedData();
@@ -92,12 +91,6 @@ export default {
 				that.pairNameWithId[fipsStringToNumber] = d.county;
 				// console.log(d.actuals.icuBeds.capacity);
 			});
-		},
-		redraw() {
-			let chartDiv = document.getElementById("map");
-			this.width = chartDiv.clientWidth;
-			this.height = chartDiv.clientHeight;
-			// this.drawMap()
 		},
 		drawMap() {
 			let that = this;
