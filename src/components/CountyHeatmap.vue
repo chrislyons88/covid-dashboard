@@ -52,12 +52,23 @@ export default {
 	},
 	async created() {
 		await this.getData();
+		await this.removeOldMap();
 		await this.getMapData();
 		await this.populateSortedData();
 		await this.drawMap();
 	},
-	mounted() {},
+	async mounted() {
+		
+		
+	},
 	methods: {
+		removeOldMap() {
+			// console.log(document.querySelector("#map").innerHTML);
+			document.querySelector("#map").innerHTML = "";
+			// d3.selectAll('svg').remove();
+			// d3.select("svg").remove();
+			// d3.select(".tooltip").remove();
+		},
 		async getData() {
 			try {
 				let response = await fetch(this.covidCountyDataUrl);
