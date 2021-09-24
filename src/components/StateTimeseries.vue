@@ -6,13 +6,25 @@
 			<Spinner />
 		</div>
 		<div v-else>
-			<p>Click on individual states in the legend to show/hide their data.</p>
-			<button id="select-all" @click="selectDeselectAll">
+			<p>
+				Click on individual states in the legend to show/hide their
+				data.
+			</p>
+			<button
+				id="select-all"
+				@click="selectDeselectAll"
+				:disabled="buttonDisabled"
+			>
 				{{ buttonText }}
 			</button>
 			<canvas id="timeseries-chart"></canvas>
 			<footer>
-				<p>Data provided by the <a target="_blank" href="https://apidocs.covidactnow.org/">Covid Act Now API</a></p>
+				<p>
+					Data provided by the
+					<a target="_blank" href="https://apidocs.covidactnow.org/"
+						>Covid Act Now API</a
+					>
+				</p>
 			</footer>
 		</div>
 	</div>
@@ -34,6 +46,7 @@ export default {
 			apiBaseUrl: "https://api.covidactnow.org/v2/",
 			apiKey: "55783d149c7b461b87d3df4de4ffa9a1",
 			buttonText: "Hide all states",
+			buttonDisabled: false,
 			// chart: {},
 			covidData: [],
 			chartData: {
@@ -59,6 +72,7 @@ export default {
 						tooltip: {
 							mode: "nearest",
 						},
+						afterUpdate: this.enableButton(),
 					},
 					scales: {
 						y: {
@@ -185,14 +199,27 @@ export default {
 				console.log(error);
 			}
 		},
-		selectDeselectAll() {
+		consoleLogError(errorMessage) {
+			console.log(errorMessage);
+		},
+		enableButton() {
+			this.buttonDisabled = false;
+		},
+		async selectDeselectAll() {
 			if (this.buttonText == "Hide all states") {
-				this.buttonText = "Show all states";
+				await this.buttonLoading();
+
 				this.deselectAll();
-				
-			} else if(this.buttonText == "Show all states") {
-				this.buttonText = "Hide all states";
+
+				this.buttonText = "Show all states";
+				this.buttonDisabled = false;
+			} else if (this.buttonText == "Show all states") {
+				await this.buttonLoading();
+
 				this.selectAll();
+
+				this.buttonText = "Hide all states";
+				this.buttonDisabled = false;
 			}
 		},
 		deselectAll() {
@@ -201,11 +228,21 @@ export default {
 			});
 			this.chart.update();
 		},
-		selectAll() {
+		async selectAll() {
 			this.chart.data.datasets.forEach(function(ds) {
 				ds.hidden = false;
 			});
 			this.chart.update();
+			return;
+		},
+		async buttonLoading() {
+			return new Promise((resolve) => {
+				this.buttonText = "Processing...";
+				this.buttonDisabled = true;
+				setTimeout(() => {
+					resolve();
+				}, 0);
+			});
 		},
 		randomRgb() {
 			var o = Math.round,
@@ -213,7 +250,7 @@ export default {
 				s = 255;
 			return (
 				"rgb(" + o(r() * s) + "," + o(r() * s) + "," + o(r() * s) + ")"
-			);0.
+			);
 		},
 		transparentize(value, opacity) {
 			var alpha = opacity === undefined ? 0.5 : 1 - opacity;
@@ -230,7 +267,6 @@ export default {
 		},
 		populateChartLabels() {
 			this.chartData.data.labels = this.filteredLabels;
-			// this.chartData.data.labels = ["2021-2-3", "2021-2-3"];
 		},
 		populateDatasets() {
 			this.chartData.data.datasets = this.filteredDatasets;
@@ -239,14 +275,4 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-	button {
-		padding:10px 25px;
-		color: #fff;
-		font-weight: bold;
-		background:#000;
-		border-radius: 5px;
-		border: solid 2px #333;
-		margin-top: 10px;
-	}
-</style>
+<style scoped lang="scss"></style>

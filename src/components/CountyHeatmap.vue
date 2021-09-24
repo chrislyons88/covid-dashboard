@@ -119,18 +119,18 @@ export default {
 			// 	height = 600;
 			var width = this.width,
 				height = this.height;
-			var color_domain = [1, 5, 10, 15, 20, 25, 30, 35, 10000];
-			var ext_color_domain = [0, 1, 5, 10, 15, 20, 25, 30, 35];
+			var color_domain = [1, 6, 11, 16, 21, 26, 31, 36, 10000];
+			var ext_color_domain = [0, 1, 6, 11, 16, 21, 26, 31, 36];
 			var legend_labels = [
 				"0",
 				"1-5",
-				"5-10",
-				"10-15",
-				"15-20",
-				"20-25",
-				"25-30",
-				"30-35",
-				"35+",
+				"6-10",
+				"11-15",
+				"16-20",
+				"21-25",
+				"26-30",
+				"31-35",
+				"36+",
 			];
 			var color = d3.scale
 				.threshold()
@@ -365,7 +365,7 @@ export default {
 		pointer-events: none;
 	}
 
-	p {
+	#map p {
 		font-family: "Proxima Nova", sans-serif;
 		font-size: 10px;
 		margin: 20px 0 0 10px;

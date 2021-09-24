@@ -29,14 +29,37 @@ footer {
 
   p {
     font-size: 1em !important;
+    margin-bottom: 20px !important;
 
     a {
       text-decoration: none;
       font-weight: bold;
       color: var(--green);
+
     }
   }
 }
+button {
+  padding:10px 25px;
+  color: #fff;
+  font-weight: bold;
+  background:#000;
+  border-radius: 5px;
+  border: solid 2px #333;
+  margin-top: 10px;
+
+  &:hover {
+    cursor: pointer;
+  }
+  &[disabled], &:disabled {
+    pointer-events: none;
+    color: #aaa;
+    background: #333;
+  }
+}
+
+
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -64,14 +87,15 @@ footer {
     transition: 1s;
     text-decoration: none;
     padding: 30px;
-
-    &.router-link-exact-active {
-      color: var(--green);
-      background: #444;
-    }
-    &:hover {
+    &:not(.router-link-exact-active):hover {
       background: #555;
       color: #ccc;
+    }
+    &.router-link-exact-active {
+      color: var(--green);
+      // filter: brightness(125%);
+      background: #444;
+      pointer-events: none;
     }
   }
 }
