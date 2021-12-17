@@ -7,7 +7,12 @@
 		<div v-else>
 			<div id="map"></div>
 			<footer>
-				<p>Data provided by the <a target="_blank" href="https://apidocs.covidactnow.org/">Covid Act Now API</a></p>
+				<p>
+					Data provided by the
+					<a target="_blank" href="https://apidocs.covidactnow.org/"
+						>Covid Act Now API</a
+					>
+				</p>
 			</footer>
 		</div>
 	</div>
@@ -47,8 +52,8 @@ export default {
 				.attr("width", this.width)
 				.attr("height", this.height)
 				.attr("preserveAspectRatio", "xMinYMin meet")
-				.style("margin", "-15px auto")
-		}
+				.style("margin", "-15px auto");
+		},
 	},
 	async created() {
 		await this.getData();
@@ -57,10 +62,7 @@ export default {
 		await this.populateSortedData();
 		await this.drawMap();
 	},
-	async mounted() {
-		
-		
-	},
+	async mounted() {},
 	methods: {
 		removeOldMap() {
 			// console.log(document.querySelector("#map").innerHTML);
@@ -89,16 +91,19 @@ export default {
 			let that = this;
 			this.covidData.forEach(function(d) {
 				let fipsStringToNumber = parseInt(d.fips);
-				if((d.actuals.icuBeds.capacity -
-					d.actuals.icuBeds.currentUsageTotal) < 0) {
-						that.pairBedsWithId[fipsStringToNumber] = 0;
+				if (
+					d.actuals.icuBeds.capacity -
+						d.actuals.icuBeds.currentUsageTotal <
+					0
+				) {
+					that.pairBedsWithId[fipsStringToNumber] = 0;
 				} else {
 					that.pairBedsWithId[fipsStringToNumber] = +(
 						d.actuals.icuBeds.capacity -
 						d.actuals.icuBeds.currentUsageTotal
 					);
 				}
-				
+
 				that.pairNameWithId[fipsStringToNumber] = d.county;
 				// console.log(d.actuals.icuBeds.capacity);
 			});
@@ -279,7 +284,7 @@ export default {
 			legend
 				.append("rect")
 				.attr("x", function(d, i) {
-					return (i+1) * ls_w - ls_w;
+					return (i + 1) * ls_w - ls_w;
 					// return 0;
 				})
 				.attr("y", 550)
@@ -293,7 +298,7 @@ export default {
 			legend
 				.append("text")
 				.attr("x", function(d, i) {
-					return (i+1) * ls_w - ls_w;
+					return (i + 1) * ls_w - ls_w;
 					// return 0;
 				})
 				.attr("y", 590)
@@ -319,14 +324,15 @@ export default {
 
 <style lang="scss">
 .heatmap {
-	width:100%;
+	width: 100%;
 	max-width: 100%;
 	overflow: hidden;
 
 	#map {
-		width:auto;
-		height:600px;
-		overflow-x: scroll;
+		width: auto;
+		height: 600px;
+		// overflow-x: scroll;
+		overflow: hidden;
 	}
 
 	.county {
@@ -370,7 +376,10 @@ export default {
 		font-size: 10px;
 		margin: 20px 0 0 10px;
 	}
-
-
+}
+@media screen and (max-width: 960px) {
+	.heatmap #map {
+		overflow-x: auto;
+	}
 }
 </style>

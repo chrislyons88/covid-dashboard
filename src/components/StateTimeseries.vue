@@ -239,9 +239,9 @@ export default {
 			return new Promise((resolve) => {
 				this.buttonText = "Processing...";
 				this.buttonDisabled = true;
-				setTimeout(() => {
+				this.$nextTick(() => {
 					resolve();
-				}, 0);
+				});
 			});
 		},
 		randomRgb() {
